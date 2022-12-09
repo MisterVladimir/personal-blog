@@ -4,25 +4,33 @@ import os
 import shlex
 import shutil
 import sys
-import datetime
+from typing import TypedDict
 
 from invoke import task
 from invoke.main import program
-from invoke.util import cd
 from pelican import main as pelican_main
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import DEFAULT_CONFIG, get_settings_from_file
 
 OPEN_BROWSER_ON_SERVE = True
-SETTINGS_FILE_BASE = "pelicanconf.py"
+SETTINGS_FILE_BASE = "personal_blog/pelican_config.py"
 SETTINGS = {}
 SETTINGS.update(DEFAULT_CONFIG)
 LOCAL_SETTINGS = get_settings_from_file(SETTINGS_FILE_BASE)
 SETTINGS.update(LOCAL_SETTINGS)
 
-CONFIG = {
+
+class ConfigDict(TypedDict):
+    settings_base: str
+    settings_publish: str
+    deploy_path: str
+    host: str
+    port: int
+
+
+CONFIG: ConfigDict = {
     "settings_base": SETTINGS_FILE_BASE,
-    "settings_publish": "publishconf.py",
+    "settings_publish": "personal_blog/publish_config.py",
     # Output path. Can be absolute or relative to tasks.py. Default: 'output'
     "deploy_path": SETTINGS["OUTPUT_PATH"],
     # Host and port for `serve`
@@ -59,7 +67,7 @@ def regenerate(c):
 
 @task
 def serve(c):
-    """Serve site at http://$HOST:$PORT/ (default is localhost:8000)"""
+    """Serve site at https://$HOST:$PORT/ (default is localhost:8000)"""
 
     class AddressReuseTCPServer(RootedHTTPServer):
         allow_reuse_address = True

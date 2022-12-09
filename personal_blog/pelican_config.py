@@ -1,8 +1,11 @@
+import pathlib
+
 AUTHOR = "Vladimir Shteyn"
 SITENAME = "Vladimir Shteyn's Personal Blog"
 SITEURL = ""
 
-PATH = "content"
+_REPO_ROOT = pathlib.Path(__file__).parents[1]
+PATH = str(_REPO_ROOT.joinpath("content"))
 
 TIMEZONE = "EST"
 
