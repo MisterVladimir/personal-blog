@@ -9,13 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Install dependency manager
+        run: pip install --upgrade pip setuptools && pip install poetry
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
           cache: poetry
-      - run: pip install --upgrade pip setuptools && pip install poetry
-      - run: poetry install
-      - run: invoke build
+      - name: Install dependencies
+        run: |
+          poetry env use 3.11
+          poetry config virtualenvs.create false
+          poetry install
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
