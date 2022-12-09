@@ -16,6 +16,7 @@ jobs:
         with:
           python-version: '3.11'
           cache: poetry
+      - run: pip install --upgrade pip setuptools && pip install poetry
       - run: poetry install
       - run: invoke build
       - uses: FirebaseExtended/action-hosting-deploy@v0
