@@ -6,11 +6,17 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - publish
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: poetry
+      - run: poetry install
       - run: invoke build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
