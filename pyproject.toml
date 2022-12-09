@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "vladimir-shteyn-personal-blog"
+version = "0.1.0"
+description = "Vladimir Shteyn's personal blog"
+authors = ["mistervladimir <vladimir@shteyn.net>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "personal_blog"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pelican = "^4.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
