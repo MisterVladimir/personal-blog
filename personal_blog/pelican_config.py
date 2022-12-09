@@ -2,7 +2,7 @@ import pathlib
 
 AUTHOR = "Vladimir Shteyn"
 SITENAME = "Vladimir Shteyn's Personal Blog"
-SITEURL = ""
+SITEURL = "https://vladimir.shteyn.net"
 
 _REPO_ROOT = pathlib.Path(__file__).parents[1]
 PATH = str(_REPO_ROOT.joinpath("content"))

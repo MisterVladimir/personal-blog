@@ -9,7 +9,7 @@ packages = [{include = "personal_blog"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pelican = "^4.8.0"
+pelican = {extras = ["markdown"], version = "^4.8.0"}
 
 
 [tool.poetry.group.dev.dependencies]
