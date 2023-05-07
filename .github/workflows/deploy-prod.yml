@@ -22,6 +22,8 @@ jobs:
         run: |
           poetry env use 3.10
           poetry install
+      - name: Install theme
+        run: poetry run pelican-themes --install contrib/themes/flex/ --verbose
       - name: Build HTML
         run: poetry run invoke build-prod
       - uses: FirebaseExtended/action-hosting-deploy@v0
