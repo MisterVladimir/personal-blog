@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 
 import os
+import pathlib
 import shlex
 import shutil
 import sys
 from typing import TypedDict
 
-from invoke import task
+from invoke import task, Context
 from invoke.main import program
 from pelican import main as pelican_main
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import DEFAULT_CONFIG, get_settings_from_file
 
 OPEN_BROWSER_ON_SERVE = True
-SETTINGS_FILE_BASE = "personal_blog/pelican_config.py"
+_REPO_ROOT = pathlib.Path(__file__).parent
+SETTINGS_FILE_BASE = _REPO_ROOT.joinpath("personal_blog", "pelican_config.py")
 SETTINGS = {}
 SETTINGS.update(DEFAULT_CONFIG)
-LOCAL_SETTINGS = get_settings_from_file(SETTINGS_FILE_BASE)
+LOCAL_SETTINGS = get_settings_from_file(str(SETTINGS_FILE_BASE))
 SETTINGS.update(LOCAL_SETTINGS)
 
 
@@ -29,8 +31,8 @@ class ConfigDict(TypedDict):
 
 
 CONFIG: ConfigDict = {
-    "settings_base": SETTINGS_FILE_BASE,
-    "settings_publish": "personal_blog/publish_config.py",
+    "settings_base": str(SETTINGS_FILE_BASE),
+    "settings_publish": str(_REPO_ROOT.joinpath("personal_blog", "publish_config.py")),
     # Output path. Can be absolute or relative to tasks.py. Default: 'output'
     "deploy_path": SETTINGS["OUTPUT_PATH"],
     # Host and port for `serve`
@@ -47,22 +49,13 @@ def clean(c):
         os.makedirs(CONFIG["deploy_path"])
 
 
-@task
-def build(c):
+@task()
+def build(c, clean=True):  # type: (Context, bool) -> None
     """Build local version of site"""
-    pelican_run("-s {settings_base}".format(**CONFIG))
-
-
-@task
-def rebuild(c):
-    """`build` with the delete switch"""
-    pelican_run("-d -s {settings_base}".format(**CONFIG))
-
-
-@task
-def regenerate(c):
-    """Automatically regenerate site upon file modification"""
-    pelican_run("-r -s {settings_base}".format(**CONFIG))
+    pelican_cmd = "-s {settings_base}".format(**CONFIG)
+    if clean:
+        pelican_cmd += " -e DELETE_OUTPUT_DIRECTORY=true"
+    pelican_run(pelican_cmd)
 
 
 @task
@@ -88,13 +81,7 @@ def serve(c):
     server.serve_forever()
 
 
-@task(build, serve)
-def reserve(c):
-    """`build`, then `serve`"""
-    pass
-
-
-@task
+@task()
 def build_prod(c):
     """Build production version of site"""
     pelican_run("-s {settings_publish}".format(**CONFIG))
@@ -139,7 +126,7 @@ def livereload(c):
     server.serve(host=CONFIG["host"], port=CONFIG["port"], root=CONFIG["deploy_path"])
 
 
-def pelican_run(cmd: str) -> None:
+def pelican_run(cmd):  # type: (str) -> None
     # ``program.core.remainder`` is all args after the "--"
     # Its type is ``str``.
     # allows to pass-through args to pelican
