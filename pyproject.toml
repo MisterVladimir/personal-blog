@@ -11,10 +11,10 @@ packages = [{include = "personal_blog"}]
 python = ">=3.8,<3.11"
 pelican = {extras = ["markdown"], version = "^4.8.0"}
 invoke = "^1.7.3"
-livereload = "^2.6.3"
 
-[tool.poetry.group.ci.dependencies]
-black = "^22.10.0"
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+livereload = "^2.6.3"
 
 [build-system]
 requires = ["poetry-core"]

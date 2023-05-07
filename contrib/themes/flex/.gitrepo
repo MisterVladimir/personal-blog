@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:alexandrevicenzi/Flex.git
+	branch = v3
+	commit = e1085e4e54e363d453a339d5914c9274a2077cc8
+	parent = 666584094553837472baa506cda314dd608b6354
+	method = merge
+	cmdver = 0.4.1
