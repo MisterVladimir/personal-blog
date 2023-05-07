@@ -20,7 +20,7 @@ jobs:
           poetry env use 3.10
           poetry install
       - name: Build HTML
-        run: poetry run invoke build
+        run: poetry run invoke build-prod
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

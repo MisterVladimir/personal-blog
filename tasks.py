@@ -88,15 +88,14 @@ def serve(c):
     server.serve_forever()
 
 
-@task
+@task(build, serve)
 def reserve(c):
     """`build`, then `serve`"""
-    build(c)
-    serve(c)
+    pass
 
 
 @task
-def preview(c):
+def build_prod(c):
     """Build production version of site"""
     pelican_run("-s {settings_publish}".format(**CONFIG))
 
@@ -140,19 +139,9 @@ def livereload(c):
     server.serve(host=CONFIG["host"], port=CONFIG["port"], root=CONFIG["deploy_path"])
 
 
-@task
-def publish(c):
-    """Publish to production via rsync"""
-    pelican_run("-s {settings_publish}".format(**CONFIG))
-    c.run(
-        'rsync --delete --exclude ".DS_Store" -pthrvz -c '
-        '-e "ssh -p {ssh_port}" '
-        "{} {ssh_user}@{ssh_host}:{ssh_path}".format(
-            CONFIG["deploy_path"].rstrip("/") + "/", **CONFIG
-        )
-    )
-
-
-def pelican_run(cmd):
-    cmd += " " + program.core.remainder  # allows to pass-through args to pelican
+def pelican_run(cmd: str) -> None:
+    # ``program.core.remainder`` is all args after the "--"
+    # Its type is ``str``.
+    # allows to pass-through args to pelican
+    cmd += " " + program.core.remainder
     pelican_main(shlex.split(cmd))
