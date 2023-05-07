@@ -7,6 +7,8 @@ SITEURL = "https://vladimir.shteyn.net"
 _REPO_ROOT = pathlib.Path(__file__).parents[1]
 PATH = str(_REPO_ROOT.joinpath("content"))
 
+THEME = "flex"
+
 TIMEZONE = "EST"
 
 DEFAULT_LANG = "en"
